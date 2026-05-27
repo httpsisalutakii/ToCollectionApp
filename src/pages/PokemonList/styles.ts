@@ -24,32 +24,36 @@ export const createStyles = (theme: Theme) =>
       color: theme.colors.text,
     },
     listContent: {
-      paddingHorizontal: 24,
+      paddingHorizontal: 15, //24
       paddingBottom: 24,
       gap: 12,
     },
     card: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: 'column', //row
+      alignItems: 'stretch', //center
       justifyContent: 'space-between',
       backgroundColor: theme.colors.surface,
       borderRadius: 16,
-      padding: 16,
+      padding: 18,
+      paddingTop: 16, //16
+      paddingHorizontal: 25,
       marginBottom: 12,
       shadowColor: theme.colors.shadow,
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.1,
       shadowRadius: 3,
-      elevation: 2,
+      overflow: 'hidden',
+      elevation: 2, //2
     },
     cardLeft: {
+      marginTop: 12,
       flex: 1,
-      marginRight: 12,
+      marginRight: 5, //12
     },
     cardName: {
-      fontSize: 18,
+      fontSize: 18, //18
       fontWeight: '700',
-      textTransform: 'capitalize',
+      textTransform: 'capitalize', //'capitalize'
       marginBottom: 8,
       color: theme.colors.text,
     },
@@ -71,8 +75,10 @@ export const createStyles = (theme: Theme) =>
       color: '#ffffff',
     },
     cardImage: {
-      width: 72,
-      height: 72,
+      borderRadius: 12,
+      width: 310,
+      height: 190,
+      resizeMode: 'cover',
     },
     searchContainer: {
     flexDirection: 'row',

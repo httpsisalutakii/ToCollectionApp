@@ -45,19 +45,31 @@ const MOCK_POKEMON_LIST: PokemonListItem[] = [
     id: 1,
     name: 'Monster High Fangs',
     imageUrl: 'https://i.pinimg.com/736x/13/ea/cf/13eacf1218f462e1c7fd5966a9d3045f.jpg',
-    types: ['grass', 'poison'],
+    types: ['doll'],
   },
   {
     id: 2,
     name: 'Kpop World',
     imageUrl: 'https://i.pinimg.com/736x/c8/6c/07/c86c077739ada1cb515659c2d05492ec.jpg',
-    types: ['fire'],
+    types: ['idol'],
   },
   {
     id: 3,
     name: 'Pokemon Card',
     imageUrl: 'https://i.pinimg.com/736x/ce/78/ea/ce78eaec782c6c486585cc50cae3fc19.jpg',
-    types: ['water'],
+    types: ['card'],
+  },
+  {
+    id: 4,
+    name: 'Action Figures',
+    imageUrl: 'https://i.pinimg.com/736x/7c/96/c2/7c96c2c1beb4dba351a673a488b7c46f.jpg',
+    types: ['animes'],
+  },
+  {
+    id: 5,
+    name: 'Mangá World',
+    imageUrl: 'https://i.pinimg.com/736x/85/c0/bc/85c0bcdc4570d05ccaccdbd213968ce6.jpg',
+    types: ['animes'],
   },
 ];
 
@@ -191,6 +203,8 @@ export default function PokemonListScreen() {
         activeOpacity={0.8}
         onPress={() => navigation.navigate('PokemonDetail', { id: item.id })}
       >
+        <Image source={{ uri: item.imageUrl }} style={styles.cardImage} />
+
         <View style={styles.cardLeft}>
           <Text style={styles.cardName}>{item.name} {favoriteIds.includes(item.id)}</Text>
           <View style={styles.typeContainer}>
@@ -204,7 +218,6 @@ export default function PokemonListScreen() {
             ))}
           </View>
         </View>
-        <Image source={{ uri: item.imageUrl }} style={styles.cardImage} />
       </TouchableOpacity>
     );
 
