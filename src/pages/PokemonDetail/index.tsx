@@ -6,14 +6,6 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../routes';
-import {
-  fetchPokemonDetail,
-  fetchPokemonSpecies,
-  type PokemonDetailResponse,
-  type PokemonSpeciesResponse
-} from '../../services/pokeapi';
-import { isFavorite, toggleFavorite } from '../../services/favoritesStorage';
-import { setLastViewedPokemon } from '../../services/lastViewedStorage';
 
 const TYPE_COLORS: Record<string, string> = {
   normal: '#A8A77A',
@@ -40,6 +32,44 @@ function getTypeColor(type: string) {
   return TYPE_COLORS[type] ?? '#A8A8A8';
 }
 
+const MOCK_DETAILS_DATA: Record<number, {
+  id: number;
+  name: string;
+  imageUrl: string;
+  description: string;
+}> = {
+  1: {
+    id: 1,
+    name: 'Monster High Fangs',
+    imageUrl: 'https://i.pinimg.com/736x/13/ea/cf/13eacf1218f462e1c7fd5966a9d3045f.jpg',
+    description: 'A comunidade Monster High Fangs é voltada para aqueles apaixonados pelo mundo dos monstrinhos filhos das maiores referências da literatura e cinema, desde a sua primeira, segunda e terceira geração.\n\nFocada em compartilhar experiências, para quem quer comprar a sua tão sonhada boneca e também, conversar com quem compartilha dos mesmos gostos.\n\nEntre e venha fazer parte da nossa comunidade Monster High Fangs!! Beijinhos monstrinhos!! <3',
+  },
+  2: {
+    id: 2,
+    name: 'Kpop World',
+    imageUrl: 'https://i.pinimg.com/736x/c8/6c/07/c86c077739ada1cb515659c2d05492ec.jpg',
+    description: 'A comunidade Neon Stage é voltada para todos os fãs do universo do K-pop, acompanhando grupos de diferentes gerações, solistas, comebacks, performances e tudo que envolve a cultura coreana.\n\nFocada em compartilhar experiências, músicas favoritas, coleções de álbuns, photocards, novidades e também criar amizades com pessoas que compartilham da mesma paixão pela música e pela dança.\n\nEntre e venha fazer parte da nossa comunidade Neon Stage!! Vamos brilhar juntos nesse fandom!! ✨🎤',
+  },
+  3: {
+    id: 3,
+    name: 'Pokemon Card',
+    imageUrl: 'https://i.pinimg.com/736x/ce/78/ea/ce78eaec782c6c486585cc50cae3fc19.jpg',
+    description: 'A comunidade PokéCard Arena é voltada para todos os apaixonados pelo universo das cartas Pokémon, seja para colecionar, batalhar, trocar cartas ou simplesmente admirar artes incríveis das coleções.\n\nFocada em compartilhar experiências, novidades do TCG, dicas para iniciantes, trocas, pulls especiais e ajudar quem está começando ou expandindo sua coleção dos sonhos. Aqui, todo treinador encontra pessoas com a mesma paixão pelo mundo Pokémon.\n\nEntre e venha fazer parte da nossa comunidade PokéCard Arena!! Temos que pegar todos!! ⚡🃏',
+  },
+  4: {
+    id: 4,
+    name: 'Action Figures',
+    imageUrl: 'https://i.pinimg.com/736x/7c/96/c2/7c96c2c1beb4dba351a673a488b7c46f.jpg',
+    description: 'A comunidade de Action FIgures é voltada para todos aqueles apaixonados pelo universo das action figures, estátuas colecionáveis e personagens icônicos da cultura pop, desde animes e games até filmes e HQs.\n\nFocada em compartilhar experiências, novidades, coleções, dicas de conservação e também ajudar quem busca encontrar aquela figure dos sonhos para completar a prateleira. Aqui, você pode conversar com pessoas que compartilham da mesma paixão pelo colecionismo e pelo universo geek.\n\nEntre e venha fazer parte da nossa comunidade Action Heroes Hub!! Sua coleção merece esse espaço!! 🎮✨'
+  },
+  5: {
+    id: 5,
+    name: 'Mangá World',
+    imageUrl: 'https://i.pinimg.com/736x/85/c0/bc/85c0bcdc4570d05ccaccdbd213968ce6.jpg',
+    description: 'A comunidade Mangá World é voltada para todos que amam o universo dos mangás, desde os clássicos inesquecíveis até os lançamentos mais atuais que conquistam leitores ao redor do mundo.\n\nFocada em compartilhar leituras, recomendações, teorias, personagens favoritos e experiências dentro desse universo tão apaixonante. Um espaço perfeito para conversar com pessoas que vivem a mesma emoção a cada novo capítulo.\n\nEntre e venha fazer parte da nossa comunidade Mangá Sekai!! Vamos viver muitas histórias juntos!! 📖🖤' 
+  },
+};
+
 export default function PokemonDetailScreen() {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -47,255 +77,80 @@ export default function PokemonDetailScreen() {
   const { id } = route.params;
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'PokemonDetail'>>();
 
-  const [pokemon, setPokemon] = useState<PokemonDetailResponse | null>(null);
-  const [description, setDescription] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [itemData, setItemData] = useState<typeof MOCK_DETAILS_DATA[number] | null>(null);
 
-  const [favorite, setFavorite] = useState(false);
-  const [favoriteLoading, setFavoriteLoading] = useState(true);
-
-  function getPokemonDescriptionFromSpecies(
-    species: PokemonSpeciesResponse,
-  ): string | null {
-    const ptEntry = species.flavor_text_entries.find(
-      (entry) => entry.language.name === 'pt-BR'
-    );
-    if (ptEntry) {
-      return ptEntry.flavor_text.replace(/\s+/g, ' ').replace(/\f/g, ' ').trim();
+  useEffect(() => {
+    // Puxa direto do banco local usando o ID recebido por parâmetro
+    if (MOCK_DETAILS_DATA[id]) {
+      setItemData(MOCK_DETAILS_DATA[id]);
     }
-    const enEntry = species.flavor_text_entries.find(
-      (entry) => entry.language.name === 'en',
-    );
-    if (enEntry) {
-      return enEntry.flavor_text.replace(/\s+/g, ' ').replace(/\f/g, ' ').trim();
-    }
-    return null;
-  }
-
-  async function handleToggleFavorite() {
-    if (!pokemon) return;
-    const summary = {
-      id: pokemon.id,
-      name: pokemon.name,
-      imageUrl:
-        pokemon.sprites.front_default ??
-        `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
-      types: pokemon.types.map((t) => t.type.name),
-    };
-    const updated = await toggleFavorite(summary);
-    setFavorite(updated.some((item) => item.id === pokemon.id));
-  }
-
-  async function handleSharePokemon() {
-    if (!pokemon) return;
-
-    const pokeApiUrl = `https://www.pokemon.com/br/pokedex/${pokemon.id}/`;
-    const message = `Olha esse Pokémon na Pokédex: ${pokemon.name} (#${String(pokemon.id).padStart(3, '0')})\n${pokeApiUrl}`;
-
-   try {
-      const result = await Share.share(
-        {
-          message,
-          title: `Pokémon: ${pokemon.name}`,
-        },
-        { subject: `Pokémon: ${pokemon.name}` },
-      );
-
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-
-        }
-      } else if (result.action === Share.dismissedAction) {
-
-      }
-    } catch (error) {
-      console.warn('Erro ao compartilhar:', error);
-    }
-  }
-
-  function handleOpenCamera() {
-    navigation.navigate('PokemonCamera', { id });
-  }
-
-
- useEffect(() => {
-    const controller = new AbortController();
-
-    async function loadPokemon() {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        const [detail, species] = await Promise.all([
-          fetchPokemonDetail(id, { signal: controller.signal }),
-          fetchPokemonSpecies(id, { signal: controller.signal }),
-        ]);
-
-        setPokemon(detail);
-        setDescription(getPokemonDescriptionFromSpecies(species));
-
-        await setLastViewedPokemon({
-          id: detail.id,
-          name: detail.name,
-          imageUrl:
-            detail.sprites.front_default ??
-            `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${detail.id}.png`,
-          types: detail.types.map((t) => t.type.name),
-        });
-      } catch (e) {
-        if ((e as Error).name !== 'AbortError') {
-          setError('Não foi possível carregar os dados do pokémon!');
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-   async function loadFavoriteStatus() {
-      try {
-        const result = await isFavorite(id);
-        setFavorite(result);
-      } finally {
-        setFavoriteLoading(false);
-      }
-    }
-
-    loadPokemon();
-    loadFavoriteStatus();
-
-    return () => { controller.abort(); };
   }, [id]);
 
-  if (isLoading) {
+  if (!itemData) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size="large" color={theme.colors.primary} />
-        <Text style={{ marginTop: 16, color: theme.colors.text }}>Carregando detalhes (simulado)...</Text>
-      </View>
-    );
-  }
-
-
-  if (error || !pokemon) {
-    return (
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <Text style={{ color: theme.colors.text, marginBottom: 16 }}>
-          {error ?? 'Erro inesperado na simulação.'} */
-        </Text>
-        <TouchableOpacity
-          //onPress={() => navigation.goBack()}
-          style={{
-            paddingHorizontal: 16,
-            paddingVertical: 10,
-            borderRadius: 24,
-            backgroundColor: theme.colors.accent,
-          }}
-        >
-          <Text style={{ color: theme.colors.text, fontWeight: 'bold' }}>Voltar</Text>
-        </TouchableOpacity>
+        <Text style={{ color: theme.colors.text }}>Item não encontrado.</Text>
       </View>
     );
   }
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <View style={styles.nameRow}>
-          <Text style={styles.name}>{pokemon.name}</Text>
-          <Text style={styles.id}>#{String(pokemon.id).padStart(3, '0')}</Text>
-        </View>
-
-        <View style={styles.typeContainer}>
-          {pokemon.types.map(({ type }) => (
-            <View
-              key={type.name}
-              style={[styles.typeBadge, { backgroundColor: TYPE_COLORS[type.name] ?? '#A8A8A8' }]}
-            >
-              <Text style={styles.typeText}>{type.name}</Text>
-            </View>
-          ))}
-        </View>
-
-        {pokemon.sprites.front_default ?
-          (<Image source={{ uri: pokemon.sprites.front_default }} style={styles.image} />) :
-          null}
-      </View>
-
-      <TouchableOpacity
-        onPress={handleToggleFavorite}
-        disabled={favoriteLoading}
-        style={{
-          backgroundColor: favorite ? '#FFCB05' : '#E5E7EB',
-          paddingHorizontal: 16,
-          paddingVertical: 10,
-          borderRadius: 999,
-          alignSelf: 'flex-start',
-          marginBottom: 16,
-        }}
-      >
-        <Text style={{ fontWeight: '700', color: '#111827' }}>
-          {favorite ? '★ Favorito' : '☆ Favoritar'}
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={handleSharePokemon}
-        style={{
-          backgroundColor: '#2563eb',
-          paddingHorizontal: 16,
-          paddingVertical: 10,
-          borderRadius: 999,
-          alignSelf: 'flex-start',
-          marginBottom: 16,
-        }}
-      >
-        <Text style={{ fontWeight: '700', color: '#fff' }}>Compartilhar</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={handleOpenCamera}
-        style={{
-          backgroundColor: '#16a34a',
-          paddingHorizontal: 16,
-          paddingVertical: 10,
-          borderRadius: 999,
-          alignSelf: 'flex-start',
-          marginBottom: 16,
-        }}
-      >
-        <Text style={{ fontWeight: '700', color: '#fff' }}>Abrir câmera</Text>
-      </TouchableOpacity>
-
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Sobre</Text>
-        <Text style={styles.sectionText}>
-          {description ?? 'Descrição não disponível.'}
-        </Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Informações básicas</Text>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Altura</Text>
-          <Text style={styles.infoValue}>{pokemon.height / 10} m</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Peso</Text>
-          <Text style={styles.infoValue}>{pokemon.weight / 10} kg</Text>
+      
+      {/* Topo do perfil (Foto redonda e Botão Lado a Lado) */}
+      <View style={styles.communityHeader}>
+        <Image source={{ uri: itemData.imageUrl }} style={styles.communityLogo} />
+        <View style={styles.headerInfo}>
+          <Text style={styles.communityTitle}>{itemData.name}</Text>
+          <TouchableOpacity style={styles.joinButton} activeOpacity={0.8}>
+            <Text style={styles.joinButtonText}>Entrar na Comunidade</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
+      {/* Seção Sobre */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Stats base</Text>
-        {pokemon.stats.map((stat) => (
-          <View key={stat.stat.name} style={styles.statRow}>
-            <Text style={styles.statName}>{stat.stat.name.toUpperCase()}</Text>
-            <Text style={styles.statValue}>{stat.base_stat}</Text>
+        <Text style={styles.sectionTitle}>Sobre a comunidade</Text>
+        <Text style={styles.sectionText}>{itemData.description}</Text>
+      </View>
+
+      {/* Canais / Chats abaixo */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Nossos chats</Text>
+
+        {/* Card do Chat de Vendas */}
+        <TouchableOpacity style={styles.chatCard} activeOpacity={0.7}>
+          <View style={styles.iconContainer}>
+            <Image 
+              source={{ uri: 'https://cdn-icons-png.flaticon.com/512/1170/1170576.png' }} 
+              style={styles.chatIcon} 
+            />
           </View>
-        ))}
+          <View style={styles.chatInfo}>
+            <Text style={styles.chatName}>Vendas</Text>
+            <Text style={styles.chatDescription}>
+              Grupo voltado a venda de bonecas completas e incompletas, sucatas, acessórios e etc.
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        {/* Card do Chat de Conversa */}
+        <TouchableOpacity style={styles.chatCard} activeOpacity={0.7}>
+          <View style={styles.iconContainer}>
+            <Image 
+              source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2462/2462719.png' }} 
+              style={styles.chatIcon} 
+            />
+          </View>
+          <View style={styles.chatInfo}>
+            <Text style={styles.chatName}>Chat</Text>
+            <Text style={styles.chatDescription}>
+              Grupo voltado para conversar sobre Monster High, preços, experiências e etc.
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
+
     </ScrollView>
   );
 };
