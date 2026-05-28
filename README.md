@@ -1,9 +1,13 @@
 ## To Collection
 
-!Tela de Login](./assets/telalogin.jpeg)
-!Tela de Listagem](./assets/telalistagem.jpeg)
-!Tela de Detalhes](./assets/teladetalhes.jpeg)
-
 <p align="center">
   <img src="./assets/telalogin.jpeg" width="700" />
+</p>
+
+<p align="center">
+  <img src="./assets/telalistagem.jpeg" width="700" />
+</p>
+
+<p align="center">
+  <img src="./assets/teladetalhes" width="700" />
 </p>
