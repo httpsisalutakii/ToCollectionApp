@@ -9,5 +9,5 @@
 </p>
 
 <p align="center">
-  <img src="./assets/teladetalhes" width="700" />
+  <img src="./assets/teladetalhes.jpeg" width="700" />
 </p>
