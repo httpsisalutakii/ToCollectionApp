@@ -67,7 +67,6 @@ export const createStyles = (theme: Theme) =>
     chatCard: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: '#ffffff',
       marginBottom: 16,
       gap: 16,
     },

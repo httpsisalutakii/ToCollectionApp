@@ -3,7 +3,7 @@ import { useColorScheme } from 'react-native';
 const lightTheme = {
   colors: {
     // Paleta inspirada na Pokédex
-    primary: '#E3350D', // vermelho Pokédex
+    primary: '#fa5ed0ff', // vermelho Pokédex
     primaryDark: '#B8200A',
     accent: '#FFCB05', // amarelo Pokédex
     accentDark: '#D4A108',
@@ -16,7 +16,8 @@ const lightTheme = {
     border: '#E5E7EB',
     inputBackground: '#E5E7EB',
     shadow: '#00000040',
-    search: '#e9339a40'
+    search: '#e9339a40',
+    black: '#000000ff',
   },
 };
 

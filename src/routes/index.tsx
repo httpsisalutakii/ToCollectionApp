@@ -4,6 +4,7 @@ import LoginScreen from '../pages/Login';
 import PokemonListScreen from '../pages/PokemonList';
 import PokemonDetailScreen from '../pages/PokemonDetail';
 import PokemonCameraScreen from '../pages/PokemonCamera';
+import { useAuth } from '../context/AuthContext';
 
 export type RootStackParamList = {
     Login: undefined;
@@ -15,14 +16,20 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNavigator() {
+    const { isAuthenticated } = useAuth();
+
     return (
         <Stack.Navigator 
-            initialRouteName="Login"
-            screenOptions={{ headerShown: false}}>
-            <Stack.Screen name="Login" component={LoginScreen}/>
-            <Stack.Screen name="PokemonList" component={PokemonListScreen}/>
-            <Stack.Screen name="PokemonDetail" component={PokemonDetailScreen}/>
-            <Stack.Screen name="PokemonCamera" component={PokemonCameraScreen}/>
+            screenOptions={{ headerShown: false }}>
+            {!isAuthenticated ? (
+                <Stack.Screen name="Login" component={LoginScreen}/>
+            ) : (
+                <>
+                    <Stack.Screen name="PokemonList" component={PokemonListScreen}/>
+                    <Stack.Screen name="PokemonDetail" component={PokemonDetailScreen}/>
+                    <Stack.Screen name="PokemonCamera" component={PokemonCameraScreen}/>
+                </>
+            )}
         </Stack.Navigator>
     )
 }

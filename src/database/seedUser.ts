@@ -1,10 +1,3 @@
-import { db } from './sqlite';
+import * as SQLite from 'expo-sqlite';
 
-export function seedUser() {
-    db.runSync(
-        `
-        INSERT OR IGNORE INTO users (email, password, created_at)
-        VALUES (?, ?, ?);`,
-        ['isabelli@gmail.com', '123456', new Date().toISOString()]
-    )
-}
+export const db = SQLite.openDatabaseSync('pokedex.db');

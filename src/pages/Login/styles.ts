@@ -12,14 +12,12 @@ export const createStyles = (theme: Theme) =>
     boxTop: {
       height: Dimensions.get('window').height / 3,
       width: '100%',
-      //backgroundColor: theme.colors.primary,
       alignItems: 'center',
       justifyContent: 'center',
     },
     boxMid: {
       height: Dimensions.get('window').height / 4,
       width: '100%',
-      //backgroundColor: theme.colors.surface,
       paddingHorizontal: 37,
     },
     boxBottom: {
@@ -33,12 +31,6 @@ export const createStyles = (theme: Theme) =>
       height: 200,
       width: 200,
     },
-//    textTop: {
-//      fontSize: 18,
-//      fontWeight: 'bold',
-//      marginTop: 40,
-//      color: theme.colors.text,
-//    },
     titleInput: {
       marginLeft: 5,
       color: theme.colors.textSecondary,
@@ -73,8 +65,61 @@ export const createStyles = (theme: Theme) =>
       borderColor: theme.colors.primaryDark,
     },
     buttonEntrarText: {
-      color: theme.colors.text,
+      color: '#FFFFFF',
       fontWeight: 'bold',
     },
+    linkCriarConta: {
+      marginTop: 16,
+      color: theme.colors.shadow,
+      fontWeight: '600',
+    },
+    errorText: {
+      color: '#DC2626',
+      marginTop: 8,
+    },
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.4)',
+      justifyContent: 'center',
+      paddingHorizontal: 24,
+    },
+    modalBox: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: 16,
+      padding: 24,
+    },
+    modalTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: theme.colors.text,
+      marginBottom: 16,
+    },
+    modalActions: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      gap: 12,
+      marginTop: 20,
+    },
+    modalButton: {
+      paddingVertical: 10,
+      paddingHorizontal: 16,
+    },
+    modalButtonText: {
+      color: theme.colors.primary,
+      fontWeight: '600',
+    },
+    modalButtonPrimary: {
+      backgroundColor: theme.colors.primary,
+      borderRadius: 8,
+      paddingVertical: 10,
+      paddingHorizontal: 16,
+    },
+    modalButtonPrimaryText: {
+      color: '#FFFFFF',
+      fontWeight: '600',
+    },
+    modalError: {
+      color: '#DC2626',
+      marginTop: 8,
+    },
   });
-

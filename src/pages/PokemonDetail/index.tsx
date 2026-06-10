@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, ActivityIndicator, TouchableOpacity, Share } from 'react-native';
+import { View, Text, Image, ScrollView, ActivityIndicator, TouchableOpacity, Share, Alert } from 'react-native';
 import { createStyles } from './styles';
 import { useTheme } from '../../global/themes';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../routes';
+import * as Notifications from 'expo-notifications';
 
 const TYPE_COLORS: Record<string, string> = {
   normal: '#A8A77A',
@@ -31,6 +32,16 @@ const TYPE_COLORS: Record<string, string> = {
 function getTypeColor(type: string) {
   return TYPE_COLORS[type] ?? '#A8A8A8';
 }
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
 
 const MOCK_DETAILS_DATA: Record<number, {
   id: number;
@@ -79,6 +90,30 @@ export default function PokemonDetailScreen() {
 
   const [itemData, setItemData] = useState<typeof MOCK_DETAILS_DATA[number] | null>(null);
 
+useEffect(() => {
+    async function requestNotificationPermission() {
+      const { status } = await Notifications.getPermissionsAsync();
+      if (status !== 'granted') {
+        await Notifications.requestPermissionsAsync();
+      }
+    }
+    requestNotificationPermission();
+  }, []);
+
+  // PASSO 4: Função para disparar a notificação local personalizada
+  async function handleJoinCommunity() {
+    if (!itemData) return;
+
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "🎉 Comunidade Aceita!",
+        body: `Você ingressou com sucesso na comunidade: ${itemData.name}`,
+        sound: true,
+      },
+      trigger: null, // null envia imediatamente
+    });
+  }
+
   useEffect(() => {
     // Puxa direto do banco local usando o ID recebido por parâmetro
     if (MOCK_DETAILS_DATA[id]) {
@@ -102,8 +137,8 @@ export default function PokemonDetailScreen() {
         <Image source={{ uri: itemData.imageUrl }} style={styles.communityLogo} />
         <View style={styles.headerInfo}>
           <Text style={styles.communityTitle}>{itemData.name}</Text>
-          <TouchableOpacity style={styles.joinButton} activeOpacity={0.8}>
-            <Text style={styles.joinButtonText}>Entrar na Comunidade</Text>
+          <TouchableOpacity style={styles.joinButton} activeOpacity={0.8} onPress={handleJoinCommunity}>
+            <Text style={styles.joinButtonText}>Já sou membro</Text>
           </TouchableOpacity>
         </View>
       </View>

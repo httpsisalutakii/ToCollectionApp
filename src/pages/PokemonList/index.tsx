@@ -9,6 +9,7 @@ import { fetchPokemonListPage, type PokemonListItemUI } from '../../services/pok
 import { getFavoriteIds, getFavoritePokemons } from '../../services/favoritesStorage';
 import { getLastViewedPokemons, type LastViewedPokemon } from '../../services/lastViewedStorage';
 import { Ionicons, Feather } from '@expo/vector-icons';
+import { useAuth } from '../../context/AuthContext';
 
 const PAGE_SIZE = 10;
 
@@ -81,6 +82,7 @@ export default function PokemonListScreen() {
   const theme = useTheme();
   const styles = createStyles(theme);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'PokemonList'>>();
+  const { signOut } = useAuth();
 
   const [items, setItems] = useState<PokemonListItem[]>(MOCK_POKEMON_LIST);
   const [offset, setOffset] = useState(0);
@@ -90,6 +92,7 @@ export default function PokemonListScreen() {
   const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
 
   const [error, setError] = useState<string | null>(null);
 
@@ -192,10 +195,7 @@ export default function PokemonListScreen() {
   );
 
   function handleLogout() {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Login" }],
-    })
+  signOut();
   }
     const renderItem = ({ item }: { item: PokemonListItem }) => (
       <TouchableOpacity
