@@ -59,18 +59,17 @@ export const createStyles = (theme: Theme) =>
       height: 50,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: theme.colors.accent,
+      backgroundColor: theme.colors.button,
       borderRadius: 40,
       borderWidth: 1,
       borderColor: theme.colors.primaryDark,
     },
     buttonEntrarText: {
-      color: '#FFFFFF',
+      color: '#d1415eff',
       fontWeight: 'bold',
     },
     linkCriarConta: {
       marginTop: 16,
-      color: theme.colors.shadow,
       fontWeight: '600',
     },
     errorText: {
@@ -115,7 +114,7 @@ export const createStyles = (theme: Theme) =>
       paddingHorizontal: 16,
     },
     modalButtonPrimaryText: {
-      color: '#FFFFFF',
+      color: '#b278d3',
       fontWeight: '600',
     },
     modalError: {

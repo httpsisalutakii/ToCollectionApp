@@ -113,7 +113,7 @@ export default function LoginScreen() {
 
       <View style={styles.boxBottom}>
         <TouchableOpacity
-          style={[styles.buttonEntrar, isButtonDisabled && { opacity: 0.2 }]}
+          style={[styles.buttonEntrar]}
           onPress={handleLogin}
           disabled={isButtonDisabled}
         >

@@ -38,7 +38,6 @@ export const createStyles = (theme: Theme) =>
       paddingTop: 16, //16
       paddingHorizontal: 25,
       marginBottom: 12,
-      shadowColor: theme.colors.shadow,
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.1,
       shadowRadius: 3,
@@ -110,7 +109,7 @@ export const createStyles = (theme: Theme) =>
       position: 'absolute',
       top: 60,
       right: 24,
-      backgroundColor: theme.colors.accent,
+      backgroundColor: theme.colors.sair,
       paddingHorizontal: 12,
       paddingVertical: 6,
       borderRadius: 8,
@@ -118,6 +117,7 @@ export const createStyles = (theme: Theme) =>
     buttonLogoutText: {
       color: theme.colors.text,
       fontSize: 14,
+      fontWeight: 'bold',
     },
     actionsRow: {
       flexDirection: 'row',

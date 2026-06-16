@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "my-pokedex",
-    "slug": "my-pokedex",
+    "name": "ToCollectionApp",
+    "slug": "ToCollectionApp",
     "version": "1.0.0",
     "plugins": [
       "expo-sqlite"

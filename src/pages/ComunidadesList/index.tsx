@@ -221,31 +221,6 @@ export default function PokemonListScreen() {
       </TouchableOpacity>
     );
 
-    if (isInitialLoading) {
-      return (
-        <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-          <ActivityIndicator size="large" color={theme.colors.primary} />
-          <Text style={{ marginTop: 16, color: theme.colors.text }}>Carregando lista...</Text>
-        </View>
-      );
-    }
-    if (error && !showOnlyFavorites && items.length === 0) {
-      return (
-        <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-          <Text style={{ color: theme.colors.text, marginBottom: 16 }}>{error}</Text>
-        </View>
-      );
-    }
-
-    if (showOnlyFavorites && isFavoritesLoading) {
-      return (
-        <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-          <ActivityIndicator size="large" color={theme.colors.primary} />
-          <Text style={{ marginTop: 16, color: theme.colors.text }}>Carregando favoritos...</Text>
-        </View>
-      );
-    }
-
     return (
       <View style={styles.container}>
         <Text style={styles.headerTitle}>ToCollection</Text>
@@ -284,7 +259,7 @@ export default function PokemonListScreen() {
 </View>
 
         <FlatList
-          data={visibleItems}
+          data={searchedItems}
           keyExtractor={(item) => String(item.id)}
           renderItem={renderItem}
           contentContainerStyle={styles.listContent}

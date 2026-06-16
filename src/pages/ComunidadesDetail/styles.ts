@@ -33,7 +33,7 @@ export const createStyles = (theme: Theme) =>
       color: '#333333',
     },
     joinButton: {
-      backgroundColor: '#ff5a84', // Cor rosa chiclete idêntica ao botão do seu print
+      backgroundColor: '#d1aee5', // Cor rosa chiclete idêntica ao botão do seu print
       paddingVertical: 10,
       paddingHorizontal: 16,
       borderRadius: 16,
@@ -45,7 +45,7 @@ export const createStyles = (theme: Theme) =>
       shadowRadius: 2,
     },
     joinButtonText: {
-      color: '#ffffff',
+      color: '#8344a8ff',
       fontWeight: 'bold',
       fontSize: 14,
       textAlign: 'center',
