@@ -25,5 +25,5 @@ npx expo start --tunnel ou somente npx expo start
 </p>
 
 <p align="center">
-  <img src="./assets/recuso nativo.jpeg" width="700" />
+  <img src="./assets/recurso nativo.jpeg" width="700" />
 </p>
